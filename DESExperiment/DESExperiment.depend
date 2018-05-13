@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1526178555 source:d:\study\光电\信息安全\des\des.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"des.h"
+
+1526178555 d:\study\光电\信息安全\des\des.h
+
+1526182810 source:d:\study\光电\信息安全\des\run_des.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<time.h>
+	"des.h"
+

@@ -5,30 +5,29 @@
 #include "des.h"
 
 static FILE *key_file, *input_file, *output_file;
-
-// Declare action parameters
 #define ACTION_GENERATE_KEY "-g"
 #define ACTION_ENCRYPT "-e"
 #define ACTION_DECRYPT "-d"
-
-// DES key is 8 bytes long
 #define DES_KEY_SIZE 8
 
-int main(int argcc, char* argvv[]) {
+
+int main() {
+	char* argv1[] = {"test", "-g", "keyfile.txt"};	int argc1 = 3;
+	char* argv2[] = {"test", "-e", "keyfile.txt", "sample.txt", "sample.enc"}; int argc2 = 5;
+	char* argv3[] = {"test", "-d", "keyfile.txt", "sample.enc", "sample_decrypted.txt"}; int argc3 = 5;
+
+    mymain(argc1, argv1);
+    mymain(argc2, argv2);
+    mymain(argc3, argv3);
+    return 0;
+}
+
+int mymain(int argc, char* argv[]) {
 	clock_t start, finish;
 	double time_taken;
 	unsigned long file_size;
 	unsigned short int padding;
 
-	char* argv[] = {"test", "-g", "keyfile.txt"};
-	char* argv[] = {"test", "-e", "keyfile.txt"};
-	run_des.o -e /tmp/keyfile.key /home/user/sample.txt /home/user/sample.enc
-	int argc = 3;
-    argv[0] = "test";
-	argv[1] = "-g";
-	argv[2] = "key.txt";
-
-	//argv[1] = "-e";
 	if (strcmp(argv[1], ACTION_GENERATE_KEY) == 0) { // Generate key file
 		if (argc != 3) {
 			printf("Invalid # of parameter specified. Usage: run_des -g keyfile.key");
