@@ -2,16 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
-/*
- * des.h provides the following functions and constants:
- *
- * generate_key, generate_sub_keys, process_message, ENCRYPTION_MODE, DECRYPTION_MODE
- *
- */
 #include "des.h"
 
-// Declare file handlers
 static FILE *key_file, *input_file, *output_file;
 
 // Declare action parameters
@@ -22,17 +14,21 @@ static FILE *key_file, *input_file, *output_file;
 // DES key is 8 bytes long
 #define DES_KEY_SIZE 8
 
-int main(int argc, char* argv[]) {
+int main(int argcc, char* argvv[]) {
 	clock_t start, finish;
 	double time_taken;
 	unsigned long file_size;
 	unsigned short int padding;
 
-	if (argc < 2) {
-		printf("You must provide at least 1 parameter, where you specify the action.");
-		return 1;
-	}
+	char* argv[] = {"test", "-g", "keyfile.txt"};
+	char* argv[] = {"test", "-e", "keyfile.txt"};
+	run_des.o -e /tmp/keyfile.key /home/user/sample.txt /home/user/sample.enc
+	int argc = 3;
+    argv[0] = "test";
+	argv[1] = "-g";
+	argv[2] = "key.txt";
 
+	//argv[1] = "-e";
 	if (strcmp(argv[1], ACTION_GENERATE_KEY) == 0) { // Generate key file
 		if (argc != 3) {
 			printf("Invalid # of parameter specified. Usage: run_des -g keyfile.key");
