@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include "des.h"
 
 static FILE *key_file, *input_file, *output_file;
@@ -11,20 +10,7 @@ static FILE *key_file, *input_file, *output_file;
 #define DES_KEY_SIZE 8
 
 
-int main() {
-	char* argv1[] = {"test", "-g", "keyfile.txt"};	int argc1 = 3;
-	char* argv2[] = {"test", "-e", "keyfile.txt", "sample.txt", "sample.enc"}; int argc2 = 5;
-	char* argv3[] = {"test", "-d", "keyfile.txt", "sample.enc", "sample_decrypted.txt"}; int argc3 = 5;
-
-    mymain(argc1, argv1);
-    mymain(argc2, argv2);
-    mymain(argc3, argv3);
-    return 0;
-}
-
 int mymain(int argc, char* argv[]) {
-	clock_t start, finish;
-	double time_taken;
 	unsigned long file_size;
 	unsigned short int padding;
 
@@ -40,9 +26,6 @@ int mymain(int argc, char* argv[]) {
 			return 1;
 		}
 
-		unsigned int iseed = (unsigned int)time(NULL);
-		srand (iseed);
-
 		short int bytes_written;
 		unsigned char* des_key = (unsigned char*) malloc(8*sizeof(char));
 		generate_key(des_key);
@@ -57,11 +40,6 @@ int mymain(int argc, char* argv[]) {
 		free(des_key);
 		fclose(key_file);
 	} else if ((strcmp(argv[1], ACTION_ENCRYPT) == 0) || (strcmp(argv[1], ACTION_DECRYPT) == 0)) { // Encrypt or decrypt
-		if (argc != 5) {
-			printf("Invalid # of parameters (%d) specified. Usage: run_des [-e|-d] keyfile.key input.file output.file", argc);
-			return 1;
-		}
-
 		// Read key file
 		key_file = fopen(argv[2], "rb");
 		if (!key_file) {
@@ -100,10 +78,7 @@ int mymain(int argc, char* argv[]) {
 		unsigned char* processed_block = (unsigned char*) malloc(8*sizeof(char));
 		key_set* key_sets = (key_set*)malloc(17*sizeof(key_set));
 
-		start = clock();
 		generate_sub_keys(des_key, key_sets);
-		finish = clock();
-		time_taken = (double)(finish - start)/(double)CLOCKS_PER_SEC;
 
 		// Determine process mode
 		if (strcmp(argv[1], ACTION_ENCRYPT) == 0) {
@@ -120,8 +95,6 @@ int mymain(int argc, char* argv[]) {
 
 		fseek(input_file, 0L, SEEK_SET);
 		number_of_blocks = file_size/8 + ((file_size%8)?1:0);
-
-		start = clock();
 
 		// Start reading input file, process and write to output file
 		while(fread(data_block, 1, 8, input_file)) {
@@ -156,8 +129,6 @@ int mymain(int argc, char* argv[]) {
 			memset(data_block, 0, 8);
 		}
 
-		finish = clock();
-
 		// Free up memory
 		free(des_key);
 		free(data_block);
@@ -165,9 +136,6 @@ int mymain(int argc, char* argv[]) {
 		fclose(input_file);
 		fclose(output_file);
 
-		// Provide feedback
-		time_taken = (double)(finish - start)/(double)CLOCKS_PER_SEC;
-		printf("Finished processing %s. Time taken: %lf seconds.\n", argv[3], time_taken);
 		return 0;
 	} else {
 		printf("Invalid action: %s. First parameter must be [ -g | -e | -d ].", argv[1]);
@@ -176,3 +144,15 @@ int mymain(int argc, char* argv[]) {
 
 	return 0;
 }
+
+int main() {
+	char* argv1[] = {"test", "-g", "keyfile.txt"};	int argc1 = 3;
+	char* argv2[] = {"test", "-e", "keyfile.txt", "sample.txt", "sample.enc"}; int argc2 = 5;
+	char* argv3[] = {"test", "-d", "keyfile.txt", "sample.enc", "sample_decrypted.txt"}; int argc3 = 5;
+
+    mymain(argc1, argv1);
+    mymain(argc2, argv2);
+    mymain(argc3, argv3);
+    return 0;
+}
+
